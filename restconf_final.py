@@ -58,26 +58,26 @@ def create():
         return "Interface 66070112 created successfully."
     elif resp.status_code == 409:
         print('Cannot create: Interface loopback 66070112 {}'.format(resp.text))
-        return "Cannot create: Interface loopback 66070112: Interface 66070112 already exists."
+        return "Cannot create: Interface loopback 66070112 : Interface 66070112 already exists."
     else:
         print('Error. Status Code: {}'.format(resp.status_code))
         return "Create failed."
 
 
-# def delete():
-#     resp = requests.<!!!REPLACEME with the proper HTTP Method!!!>(
-#         <!!!REPLACEME with URL!!!>, 
-#         auth=basicauth, 
-#         headers=<!!!REPLACEME with HTTP Header!!!>, 
-#         verify=False
-#         )
+def delete():
+    resp = requests.delete(
+        api_url + "data/ietf-interfaces:interfaces/interface=Loopback66070112",
+        auth=basicauth,
+        headers=headers,
+        verify=False
+        )
 
-#     if(resp.status_code >= 200 and resp.status_code <= 299):
-#         print("STATUS OK: {}".format(resp.status_code))
-#         return "<!!!REPLACEME with proper message!!!>"
-#     else:
-#         print('Error. Status Code: {}'.format(resp.status_code))
-
+    if(resp.status_code >= 200 and resp.status_code <= 299):
+        print("STATUS OK: {}".format(resp.status_code))
+        return "Interface Loopback 66070112 deleted successfully."
+    else:
+        print('Error. Status Code: {}'.format(resp.status_code))
+        return "Cannot delete: Interface loopback 66070112."
 
 # def enable():
 #     yangConfig = <!!!REPLACEME with YANG data!!!>
