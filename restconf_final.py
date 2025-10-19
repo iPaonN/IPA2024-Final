@@ -33,7 +33,6 @@ def create():
             "name": "Loopback66070112",
             "description": "Created via RESTCONF",
             "type": "iana-if-type:softwareLoopback",
-            "enabled": True,
             "ietf-ip:ipv4": {
                 "address": [
                     {
@@ -127,27 +126,39 @@ def disable():
         return "Cannot shutdown : Interface loopback 66070112."
 
 
-# def status():
-#     api_url_status = "<!!!REPLACEME with URL of RESTCONF Operational API!!!>"
+def status():
+    api_ch4k_status = api_url + "data/ietf-interfaces:interfaces-state"
 
-#     resp = requests.<!!!REPLACEME with the proper HTTP Method!!!>(
-#         <!!!REPLACEME with URL!!!>, 
-#         auth=basicauth, 
-#         headers=<!!!REPLACEME with HTTP Header!!!>, 
-#         verify=False
-#         )
+    resp = requests.get(
+        api_ch4k_status,
+        auth=basicauth,
+        headers=headers,
+        verify=False
+        )
 
-#     if(resp.status_code >= 200 and resp.status_code <= 299):
-#         print("STATUS OK: {}".format(resp.status_code))
-#         response_json = resp.json()
-#         admin_status = <!!!REPLACEME!!!>
-#         oper_status = <!!!REPLACEME!!!>
-#         if admin_status == 'up' and oper_status == 'up':
-#             return "<!!!REPLACEME with proper message!!!>"
-#         elif admin_status == 'down' and oper_status == 'down':
-#             return "<!!!REPLACEME with proper message!!!>"
-#     elif(resp.status_code == 404):
-#         print("STATUS NOT FOUND: {}".format(resp.status_code))
-#         return "<!!!REPLACEME with proper message!!!>"
-#     else:
-#         print('Error. Status Code: {}'.format(resp.status_code))
+    if(resp.status_code >= 200 and resp.status_code <= 299):
+        print("STATUS OK: {}".format(resp.status_code))
+
+        #Used an AI to help write this part for parsing JSON response. --> Start
+        response_json = resp.json()
+        interfaces = response_json.get("ietf-interfaces:interfaces-state", {}).get("interface", [])
+        loopback = next((i for i in interfaces if i.get("name") == "Loopback66070112"), None)
+
+        if not loopback:
+            return "No Interface loopback 66070112."
+
+        admin_status = loopback.get("admin-status")
+        oper_status = loopback.get("oper-status")
+
+        if admin_status == 'up' and oper_status == 'up':
+            return "Interface loopback 66070112 is currently enabled."
+        elif admin_status == 'down' and oper_status == 'down':
+            return "Interface loopback 66070112 is currently disabled."
+        # <-- End
+
+    elif(resp.status_code == 404):
+        print("STATUS NOT FOUND: {}".format(resp.status_code))
+        return "No Interface loopback 66070112."
+    else:
+        print('Error. Status Code: {}'.format(resp.status_code))
+        return "Cannot get status : Interface loopback 66070112."
