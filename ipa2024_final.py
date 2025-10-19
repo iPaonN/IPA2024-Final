@@ -7,9 +7,10 @@
 # 1. Import libraries for API requests, JSON formatting, time, os, (restconf_final or netconf_final), netmiko_final, and ansible_final.
 import requests
 import os
-import restconf_final
 import time
 import json
+import restconf_final
+import netmiko_final
 
 #######################################################################################
 # 2. Assign the Webex access token to the variable ACCESS_TOKEN using environment variables.
@@ -91,8 +92,8 @@ while True:
             responseMessage = restconf_final.disable()
         elif command == "status":
             responseMessage = restconf_final.status()
-        #  elif command == "gigabit_status":
-        #     <!!!REPLACEME with code for gigabit_status command!!!>
+        elif command == "gigabit_status":
+            responseMessage = netmiko_final.gigabit_status()
         # elif command == "showrun":
         #     <!!!REPLACEME with code for showrun command!!!>
         else:
