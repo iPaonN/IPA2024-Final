@@ -103,22 +103,28 @@ def enable():
         return "Cannot enable : Interface loopback 66070112."
 
 
-# def disable():
-#     yangConfig = <!!!REPLACEME with YANG data!!!>
+def disable():
+    yangConfig = {
+        "ietf-interfaces:interface": {
+            "name": "Loopback66070112",
+            "enabled": False
+        }
+    }
 
-#     resp = requests.<!!!REPLACEME with the proper HTTP Method!!!>(
-#         <!!!REPLACEME with URL!!!>, 
-#         data=json.dumps(<!!!REPLACEME with yangConfig!!!>), 
-#         auth=basicauth, 
-#         headers=<!!!REPLACEME with HTTP Header!!!>, 
-#         verify=False
-#         )
+    resp = requests.patch(
+        api_url + "data/ietf-interfaces:interfaces/interface=Loopback66070112",
+        data=json.dumps(yangConfig),
+        auth=basicauth,
+        headers=headers,
+        verify=False
+        )
 
-#     if(resp.status_code >= 200 and resp.status_code <= 299):
-#         print("STATUS OK: {}".format(resp.status_code))
-#         return "<!!!REPLACEME with proper message!!!>"
-#     else:
-#         print('Error. Status Code: {}'.format(resp.status_code))
+    if(resp.status_code >= 200 and resp.status_code <= 299):
+        print("STATUS OK: {}".format(resp.status_code))
+        return "Interface loopback 66070112 shutdowned successfully."
+    else:
+        print('Error. Status Code: {}'.format(resp.status_code))
+        return "Cannot shutdown : Interface loopback 66070112."
 
 
 # def status():

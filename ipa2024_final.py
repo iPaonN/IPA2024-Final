@@ -89,8 +89,8 @@ while True:
             responseMessage = restconf_final.delete()
         elif command == "enable":
             responseMessage = restconf_final.enable()
-        # elif command == "disable":
-        #     <!!!REPLACEME with code for disable command!!!>
+        elif command == "disable":
+            responseMessage = restconf_final.disable()
         # elif command == "status":
         #     <!!!REPLACEME with code for status command!!!>
         #  elif command == "gigabit_status":
