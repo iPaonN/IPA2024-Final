@@ -17,17 +17,17 @@ headers = {
 }
 basicauth = (os.getenv("userNAME"), os.getenv("passWORD"))
 
-def debug_env():
-    print("=== Environment Debug ===")
-    print(f"API_URL: {os.getenv('API_URL')}")
-    print(f"USERNAME: {os.getenv('userNAME')}")
-    print(f"PASSWORD: {os.getenv('passWORD')}")
-    print(f"Basic Auth Tuple: {(os.getenv('userNAME'), '*' * len(os.getenv('passWORD', '')) if os.getenv('passWORD') else 'None')}")
-    print("========================")
+# def debug_env():
+#     print("=== Environment Debug ===")
+#     print(f"API_URL: {os.getenv('API_URL')}")
+#     print(f"USERNAME: {os.getenv('userNAME')}")
+#     print(f"PASSWORD: {os.getenv('passWORD')}")
+#     print(f"Basic Auth Tuple: {(os.getenv('userNAME'), '*' * len(os.getenv('passWORD', '')) if os.getenv('passWORD') else 'None')}")
+#     print("========================")
 
 
 def create():
-    debug_env()
+    # debug_env()
     yangConfig = {
         "ietf-interfaces:interface": {
             "name": "Loopback66070112",
@@ -79,22 +79,28 @@ def delete():
         print('Error. Status Code: {}'.format(resp.status_code))
         return "Cannot delete: Interface loopback 66070112."
 
-# def enable():
-#     yangConfig = <!!!REPLACEME with YANG data!!!>
+def enable():
+    yangConfig = {
+        "ietf-interfaces:interface": {
+            "name": "Loopback66070112",
+            "enabled": True
+        }
+    }
 
-#     resp = requests.<!!!REPLACEME with the proper HTTP Method!!!>(
-#         <!!!REPLACEME with URL!!!>, 
-#         data=json.dumps(<!!!REPLACEME with yangConfig!!!>), 
-#         auth=basicauth, 
-#         headers=<!!!REPLACEME with HTTP Header!!!>, 
-#         verify=False
-#         )
+    resp = requests.patch(
+        api_url + "data/ietf-interfaces:interfaces/interface=Loopback66070112",
+        data=json.dumps(yangConfig),
+        auth=basicauth,
+        headers=headers,
+        verify=False
+        )
 
-#     if(resp.status_code >= 200 and resp.status_code <= 299):
-#         print("STATUS OK: {}".format(resp.status_code))
-#         return "<!!!REPLACEME with proper message!!!>"
-#     else:
-#         print('Error. Status Code: {}'.format(resp.status_code))
+    if(resp.status_code >= 200 and resp.status_code <= 299):
+        print("STATUS OK: {}".format(resp.status_code))
+        return "Interface loopback 66070112 enabled successfully."
+    else:
+        print('Error. Status Code: {}'.format(resp.status_code))
+        return "Cannot enable : Interface loopback 66070112."
 
 
 # def disable():

@@ -87,8 +87,8 @@ while True:
             responseMessage = restconf_final.create()  
         elif command == "delete":
             responseMessage = restconf_final.delete()
-        # elif command == "enable":
-        #     <!!!REPLACEME with code for enable command!!!>
+        elif command == "enable":
+            responseMessage = restconf_final.enable()
         # elif command == "disable":
         #     <!!!REPLACEME with code for disable command!!!>
         # elif command == "status":
