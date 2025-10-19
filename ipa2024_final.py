@@ -8,18 +8,16 @@
 import requests
 import os
 import restconf_final
-from dotenv import load_dotenv
 import time
 import json
 
-load_dotenv(override=True)
 #######################################################################################
 # 2. Assign the Webex access token to the variable ACCESS_TOKEN using environment variables.
 
 ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
-print("Current working directory:", os.getcwd())
-print("ACCESS_TOKEN value:", repr(ACCESS_TOKEN))
+# print("Current working directory:", os.getcwd())
+# print("ACCESS_TOKEN value:", repr(ACCESS_TOKEN))
 
 #######################################################################################
 # 3. Prepare parameters get the latest message for messages API.
