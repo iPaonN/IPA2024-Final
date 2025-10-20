@@ -11,6 +11,7 @@ import time
 import json
 import restconf_final
 import netmiko_final
+import ansible_final
 
 #######################################################################################
 # 2. Assign the Webex access token to the variable ACCESS_TOKEN using environment variables.
@@ -82,6 +83,8 @@ while True:
 
 # 5. Complete the logic for each command
 
+        attachment_path = None
+
         if command == "create":
             responseMessage = restconf_final.create()  
         elif command == "delete":
@@ -94,8 +97,14 @@ while True:
             responseMessage = restconf_final.status()
         elif command == "gigabit_status":
             responseMessage = netmiko_final.gigabit_status()
-        # elif command == "showrun":
-        #     <!!!REPLACEME with code for showrun command!!!>
+        elif command == "showrun":
+            showrun_result = ansible_final.showrun()
+            response_lines = [showrun_result.get("message", "")]
+            if showrun_result.get("output"):
+                response_lines.append(showrun_result["output"])
+            responseMessage = "\n".join(line for line in response_lines if line)
+            if showrun_result.get("success"):
+                attachment_path = showrun_result.get("file_path")
         else:
             responseMessage = "Error: No command or unknown command"
         
@@ -113,38 +122,50 @@ while True:
         # Read Send a Message with Attachments Local File Attachments
         # https://developer.webex.com/docs/basics for more detail
 
-        if command == "showrun" and responseMessage == 'ok':
-            # filename = "<!!!REPLACEME with show run filename and path!!!>"
-            # fileobject = <!!!REPLACEME with open file!!!>
-            # filetype = "<!!!REPLACEME with Content-type of the file!!!>"
-            # postData = {
-            #     "roomId": <!!!REPLACEME!!!>,
-            #     "text": "show running config",
-            #     "files": (<!!!REPLACEME!!!>, <!!!REPLACEME!!!>, <!!!REPLACEME!!!>),
-            # }
-            # postData = MultipartEncoder(<!!!REPLACEME!!!>)
-            # HTTPHeaders = {
-            # "Authorization": ACCESS_TOKEN,
-            # "Content-Type": <!!!REPLACEME with postData Content-Type!!!>,
-            # }
-            continue # don't forget to remove
-        # other commands only send text, or no attached file.
+        if attachment_path:
+            if not os.path.exists(attachment_path):
+                responseMessage = (
+                    responseMessage
+                    + "\nAttachment missing on controller."
+                    if responseMessage
+                    else "Attachment missing on controller."
+                )
+                attachment_path = None
+
+        if attachment_path:
+            with open(attachment_path, "rb") as attachment_file:
+                data = {
+                    "roomId": roomIdToGetMessages,
+                    "text": responseMessage or "Ansible backup completed successfully.",
+                }
+                files = {
+                    "files": (
+                        os.path.basename(attachment_path),
+                        attachment_file,
+                        "text/plain",
+                    )
+                }
+                HTTPHeaders = {"Authorization": "Bearer " + ACCESS_TOKEN}
+                r = requests.post(
+                    "https://webexapis.com/v1/messages",
+                    data=data,
+                    files=files,
+                    headers=HTTPHeaders,
+                )
         else:
-            postData = {"roomId": os.getenv("roomIdToGetMessages"), "text": responseMessage}
+            postData = {"roomId": roomIdToGetMessages, "text": responseMessage}
             postData = json.dumps(postData)
 
-            # the Webex Teams HTTP headers, including the Authoriztion and Content-Type
             HTTPHeaders = {
                 "Authorization": "Bearer " + ACCESS_TOKEN,
                 "Content-Type": "application/json"
             }
 
-        # Post the call to the Webex Teams message API.
-        r = requests.post(
-            "https://webexapis.com/v1/messages",
-            data=postData,
-            headers=HTTPHeaders,
-        )
+            r = requests.post(
+                "https://webexapis.com/v1/messages",
+                data=postData,
+                headers=HTTPHeaders,
+            )
         if not r.status_code == 200:
             raise Exception(
                 "Incorrect reply from Webex Teams API. Status code: {}".format(r.status_code)
