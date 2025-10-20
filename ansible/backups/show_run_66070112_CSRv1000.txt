@@ -1,0 +1,200 @@
+Building configuration...
+
+Current configuration : 3917 bytes
+!
+! Last configuration change at 07:03:44 UTC Mon Oct 20 2025 by NETCONF
+!
+version 16.9
+service timestamps debug datetime msec
+service timestamps log datetime msec
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname CSRv1000
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+ip domain name CSRv1000
+!
+!
+!
+login on-success log
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+! 
+! 
+! 
+! 
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+crypto pki trustpoint TP-self-signed-1617481549
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-1617481549
+ revocation-check none
+ rsakeypair TP-self-signed-1617481549
+!
+!
+crypto pki certificate chain TP-self-signed-1617481549
+ certificate self-signed 01
+  30820330 30820218 A0030201 02020101 300D0609 2A864886 F70D0101 05050030 
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 31363137 34383135 3439301E 170D3235 31303139 31373238 
+  32345A17 0D333030 31303130 30303030 305A3031 312F302D 06035504 03132649 
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D31 36313734 
+  38313534 39308201 22300D06 092A8648 86F70D01 01010500 0382010F 00308201 
+  0A028201 0100B73B 86268D96 6FECF38E 95980693 D1FC6A29 5ACA93B0 AB19BF92 
+  63EDA2E4 2B5FF35D AF5F49DF 5D7C1386 95E3DF15 A9F3EC1A 2A52D349 E222DF9A 
+  73282DB0 96794F57 06E8B603 3F908B1A 41EC07F4 1BE28B3A E08F38AF BAEC25F6 
+  000B542D 1594C755 6DA6EF84 057F2F87 AA37804F 24D3C0D1 D8F57DE1 2E62C221 
+  160425CF F578C6B1 62B32BC6 2399FFD8 8CD802C4 AC92BAB2 6B9B4F48 633E65F4 
+  71F4DD77 84241CBB B9B8010D B7907035 B2A8EF79 41C392E8 13AEA9C5 831BF6CB 
+  BD52FE40 09CABAAD 30018A70 C1D5DFAB 050E20BC 872D4BAA EDC51CD0 3BD43DCA 
+  A6E00E63 5E7A73A7 F883F834 0D2A958B C2C0A6E1 D57B31F5 FDF88B53 08DFD391 
+  EDCC119A 4CFF0203 010001A3 53305130 0F060355 1D130101 FF040530 030101FF 
+  301F0603 551D2304 18301680 148D3ADA AF73E05F 55FDA508 AD420E24 013A6B9D 
+  5D301D06 03551D0E 04160414 8D3ADAAF 73E05F55 FDA508AD 420E2401 3A6B9D5D 
+  300D0609 2A864886 F70D0101 05050003 82010100 57B15F10 8EC4BE57 556A242A 
+  087CA22A 23D4111C E1F86B9F 307F881A 165A9993 56936BAD DBFF09FD 1ECAC9ED 
+  2FE6E620 38650A6F AC12BAED 2D847CC3 98DE8799 BBFEAE60 FAA985E7 44B1C281 
+  09DFB64C CA90D43E 77C77081 E3B13377 D80D4D65 166EE5B7 85798B97 A659E446 
+  DEE2CD15 8D971FD1 0F3047AA 3F4F4265 0DA43830 4A8B2655 213DEB47 FD5DDD3B 
+  9218328E 4BA6CBE5 2D04B301 FF0968D4 7C64423D E4FAA89A BB506BD3 F5C49D80 
+  2433BA75 63E82796 913B7412 8D804360 8D1F113B D2FD1ABD 6CC8C794 D25500C5 
+  FCD88C8A 92027E86 F76D7998 8C45AC64 FCDDDF22 5D4B4937 53156EED 04389D92 
+  6A492E96 A81DBA15 9D82B59B 49D6B630 D0F97667
+  	quit
+!
+!
+!
+!
+!
+!
+!
+!
+license udi pid CSR1000V sn 9W352I0D2YB
+no license smart enable
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+!
+!
+restconf
+!
+username cisco privilege 15 secret 5 $1$SOHs$kjr21eqsZ/Bu68P5QWtYx/
+!
+redundancy
+!
+!
+!
+!
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+! 
+! 
+!
+!
+interface Loopback66070112
+ description Created via RESTCONF
+ ip address 172.1.12.1 255.255.255.0
+!
+interface GigabitEthernet1
+ ip address dhcp
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet2
+ no ip address
+ shutdown
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet3
+ no ip address
+ shutdown
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet4
+ no ip address
+ shutdown
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+ip http client source-interface GigabitEthernet1
+!
+ip ssh version 2
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+line con 0
+ stopbits 1
+line vty 0 4
+ exec-timeout 0 0
+ logging synchronous
+ login local
+ transport input ssh
+line vty 5 15
+ exec-timeout 0 0
+ logging synchronous
+ login local
+ transport input ssh
+!
+!
+!
+!
+!
+!
+end
